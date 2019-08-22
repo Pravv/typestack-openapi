@@ -1,0 +1,10 @@
+npm-debug*
+build
+node_modules
+coverage
+.vscode/
+*.key
+*.secret
+yarn-error.log
+.idea/
+dist/
