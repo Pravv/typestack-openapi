@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
 import {
   MetadataArgsStorage,
-  RoutingControllersOptions,
 } from 'routing-controllers';
 
 import { getSpec } from './generateSpec';
@@ -19,9 +18,9 @@ export * from './parseMetadata';
  * @param routingControllerOptions routing-controllers options
  * @param additionalProperties Additional OpenAPI Spec properties
  */
-export function routingControllersToSpec(storage: MetadataArgsStorage, typeInfo, routingControllerOptions: RoutingControllersOptions = {}, additionalProperties: Partial<oa.OpenAPIObject> = {}): oa.OpenAPIObject {
-  const routes = parseRoutes(storage, typeInfo, routingControllerOptions);
-  const spec = getSpec(routes);
+export function routingControllersToSpec(projectPath: string, storage: MetadataArgsStorage, additionalProperties: Partial<oa.OpenAPIObject> = {}): oa.OpenAPIObject {
+  const routes = parseRoutes(storage);
+  const spec = getSpec(projectPath, storage, routes);
 
   return _.merge(spec, additionalProperties);
 }

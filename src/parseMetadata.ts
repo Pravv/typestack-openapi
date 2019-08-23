@@ -23,7 +23,7 @@ export interface IRoute {
 /**
  * Parse routing-controllers metadata into an IRoute objects array.
  */
-export function parseRoutes(storage: MetadataArgsStorage, typeInfo, options: RoutingControllersOptions = {}): IRoute[] {
+export function parseRoutes(storage: MetadataArgsStorage, options: RoutingControllersOptions = {}): IRoute[] {
   return storage.actions.map(action => {
 
     return {

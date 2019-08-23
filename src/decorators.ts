@@ -1,15 +1,15 @@
-import * as _ from 'lodash'
+import * as _ from 'lodash';
 import {
   OperationObject,
   ReferenceObject,
   ResponsesObject,
-  SchemaObject
-} from 'openapi3-ts'
-import 'reflect-metadata'
+  SchemaObject,
+} from 'openapi3-ts';
+import 'reflect-metadata';
 
-import { getContentType, getStatusCode, IRoute } from './index'
+import { getContentType, getStatusCode, IRoute } from './index';
 
-const OPEN_API_KEY = Symbol('routing-controllers-openapi:OpenAPI')
+const OPEN_API_KEY = Symbol('routing-controllers-openapi:OpenAPI');
 
 export type OpenAPIParam =
   | Partial<OperationObject>
@@ -28,15 +28,15 @@ export function OpenAPI(spec: OpenAPIParam) {
   // tslint:disable-next-line:ban-types
   return (...args: [Function] | [object, string, PropertyDescriptor]) => {
     if (args.length === 1) {
-      const [target] = args
-      const currentMeta = getOpenAPIMetadata(target)
-      setOpenAPIMetadata([spec, ...currentMeta], target)
+      const [target] = args;
+      const currentMeta = getOpenAPIMetadata(target);
+      setOpenAPIMetadata([spec, ...currentMeta], target);
     } else {
-      const [target, key] = args
-      const currentMeta = getOpenAPIMetadata(target, key)
-      setOpenAPIMetadata([spec, ...currentMeta], target, key)
+      const [target, key] = args;
+      const currentMeta = getOpenAPIMetadata(target, key);
+      setOpenAPIMetadata([spec, ...currentMeta], target, key);
     }
-  }
+  };
 }
 
 /**
@@ -44,19 +44,19 @@ export function OpenAPI(spec: OpenAPIParam) {
  */
 export function applyOpenAPIDecorator(
   originalOperation: OperationObject,
-  route: IRoute
+  route: IRoute,
 ): OperationObject {
-  const { action } = route
+  const { action } = route;
   const openAPIParams = [
     ...getOpenAPIMetadata(action.target),
-    ...getOpenAPIMetadata(action.target.prototype, action.method)
-  ]
+    ...getOpenAPIMetadata(action.target.prototype, action.method),
+  ];
 
-  return openAPIParams.reduce((acc: OperationObject, oaParam: OpenAPIParam) => {
-    return _.isFunction(oaParam)
-      ? oaParam(acc, route)
-      : _.merge({}, acc, oaParam)
-  }, originalOperation) as OperationObject
+  // @ts-ignore
+  return openAPIParams.reduce((acc: OperationObject, oaParam: OpenAPIParam) => (_.isFunction(oaParam)
+    // @ts-ignore
+    ? oaParam(acc, route)
+    : _.merge({}, acc, oaParam)), originalOperation) as OperationObject;
 }
 
 /**
@@ -67,7 +67,7 @@ function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
     (key
       ? Reflect.getMetadata(OPEN_API_KEY, target.constructor, key)
       : Reflect.getMetadata(OPEN_API_KEY, target)) || []
-  )
+  );
 }
 
 /**
@@ -76,11 +76,11 @@ function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
 function setOpenAPIMetadata(
   value: OpenAPIParam[],
   target: object,
-  key?: string
+  key?: string,
 ) {
   return key
     ? Reflect.defineMetadata(OPEN_API_KEY, value, target.constructor, key)
-    : Reflect.defineMetadata(OPEN_API_KEY, value, target)
+    : Reflect.defineMetadata(OPEN_API_KEY, value, target);
 }
 
 /**
@@ -89,48 +89,42 @@ function setOpenAPIMetadata(
 export function ResponseSchema(
   responseClass: Function | string, // tslint:disable-line
   options: {
-    contentType?: string
-    description?: string
-    statusCode?: string | number
-    isArray?: boolean
-  } = {}
+    contentType?: string;
+    description?: string;
+    statusCode?: string | number;
+    isArray?: boolean;
+  } = {},
 ) {
   const setResponseSchema = (source: OperationObject, route: IRoute) => {
-    const contentType = options.contentType || getContentType(route)
-    const description = options.description || ''
-    const isArray = options.isArray || false
-    const statusCode = (options.statusCode || getStatusCode(route)) + ''
+    const contentType = options.contentType || getContentType(route);
+    const description = options.description || '';
+    const isArray = options.isArray || false;
+    const statusCode = `${options.statusCode || getStatusCode(route)}`;
 
-    let responseSchemaName = ''
+    let responseSchemaName = '';
     if (typeof responseClass === 'function' && responseClass.name) {
-      responseSchemaName = responseClass.name
+      responseSchemaName = responseClass.name;
     } else if (typeof responseClass === 'string') {
-      responseSchemaName = responseClass
+      responseSchemaName = responseClass;
     }
 
     if (responseSchemaName) {
-      const reference: ReferenceObject = {
-        $ref: `#/components/schemas/${responseSchemaName}`
-      }
+      const reference: ReferenceObject = { $ref: `#/components/schemas/${responseSchemaName}` };
       const schema: SchemaObject = isArray
         ? { items: reference, type: 'array' }
-        : reference
+        : reference;
       const responses: ResponsesObject = {
         [statusCode]: {
-          content: {
-            [contentType]: {
-              schema
-            }
-          },
-          description
-        }
-      }
+          content: { [contentType]: { schema } },
+          description,
+        },
+      };
 
-      return _.merge({}, source, { responses })
+      return _.merge({}, source, { responses });
     }
 
-    return source
-  }
+    return source;
+  };
 
-  return OpenAPI(setResponseSchema)
+  return OpenAPI(setResponseSchema);
 }

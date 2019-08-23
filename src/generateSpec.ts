@@ -2,20 +2,25 @@
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
 import * as pathToRegexp from 'path-to-regexp';
+import { Key } from 'path-to-regexp';
+
 import 'reflect-metadata';
 import { ParamMetadataArgs } from 'routing-controllers/metadata/args/ParamMetadataArgs';
 
 import { applyOpenAPIDecorator } from './decorators';
 import { IRoute } from './index';
-import { getControllerMethodsTypes } from './ast';
+import { getControllerMethodsTypes, schemas } from './ast';
+import { MetadataArgsStorage } from 'routing-controllers';
+
+let typeInformation;
 
 /** Return full Express path of given route. */
 export function getFullExpressPath(route: IRoute): string {
   const { action, controller, options } = route;
   return (
-    (options.routePrefix || '') +
-    (controller.route || '') +
-    (action.route || '')
+    (options.routePrefix || '')
+    + (controller.route || '')
+    + (action.route || '')
   );
 }
 
@@ -58,11 +63,7 @@ export function getOperationId(route: IRoute): string {
  * Return OpenAPI Paths Object for given routes
  */
 export function getPaths(routes: IRoute[]): oa.PathObject {
-  const routePaths = routes.map(route => ({
-    [getFullPath(route)]: {
-      [route.action.type]: getOperation(route),
-    },
-  }));
+  const routePaths = routes.map(route => ({ [getFullPath(route)]: { [route.action.type]: getOperation(route) } }));
 
   // @ts-ignore: array spread
   return _.merge(...routePaths);
@@ -113,7 +114,7 @@ export function getPathParams(route: IRoute): oa.ParameterObject[] {
   return tokens
     .filter(_.isObject) // Omit non-parameter plain string tokens
     .map((token: pathToRegexp.Key) => {
-      const name = token.name + '';
+      const name = `${token.name}`;
       const param: oa.ParameterObject = {
         in: 'path',
         name,
@@ -128,8 +129,7 @@ export function getPathParams(route: IRoute): oa.ParameterObject[] {
       const meta = _.find(route.params, { name, type: 'param' });
       if (meta) {
         const metaSchema = getParamSchema(meta);
-        param.schema =
-          'type' in metaSchema ? { ...param.schema, ...metaSchema } : metaSchema;
+        param.schema = metaSchema;//= 'type' in metaSchema ? { ...param.schema, ...metaSchema } : metaSchema;
       }
 
       return param;
@@ -172,9 +172,8 @@ export function getQueryParams(route: IRoute): oa.ParameterObject[] {
  */
 export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
   const bodyParamMetas = route.params.filter(d => d.type === 'body-param');
-  const bodyParamsSchema: oa.SchemaObject | null =
-    bodyParamMetas.length > 0
-      ? bodyParamMetas.reduce(
+  const bodyParamsSchema: oa.SchemaObject | null = bodyParamMetas.length > 0
+    ? bodyParamMetas.reduce(
       (acc: oa.SchemaObject, d) => ({
         ...acc,
         properties: {
@@ -186,15 +185,14 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
           : acc.required,
       }),
       { properties: {}, required: [], type: 'object' },
-      )
-      : null;
+    )
+    : null;
 
   const bodyMeta = route.params.find(d => d.type === 'body');
 
   if (bodyMeta) {
     const bodySchema = getParamSchema(bodyMeta);
-    const { $ref } =
-      'items' in bodySchema && bodySchema.items ? bodySchema.items : bodySchema;
+    const { $ref } = 'items' in bodySchema && bodySchema.items ? bodySchema.items : bodySchema;
 
     return {
       content: {
@@ -207,10 +205,9 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
       description: _.last(_.split($ref, '/')),
       required: isRequired(bodyMeta, route),
     };
-  } else if (bodyParamsSchema) {
-    return {
-      content: { 'application/json': { schema: bodyParamsSchema } },
-    };
+  }
+  if (bodyParamsSchema) {
+    return { content: { 'application/json': { schema: bodyParamsSchema } } };
   }
 }
 
@@ -218,10 +215,9 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
  * Return the content type of given route.
  */
 export function getContentType(route: IRoute): string {
-  const defaultContentType =
-    route.controller.type === 'json'
-      ? 'application/json'
-      : 'text/html; charset=utf-8';
+  const defaultContentType = route.controller.type === 'json'
+    ? 'application/json'
+    : 'text/html; charset=utf-8';
   const contentMeta = _.find(route.responseHandlers, { type: 'content-type' });
   return contentMeta ? contentMeta.value : defaultContentType;
 }
@@ -231,15 +227,15 @@ export function getContentType(route: IRoute): string {
  */
 export function getStatusCode(route: IRoute): string {
   const successMeta = _.find(route.responseHandlers, { type: 'success-code' });
-  return successMeta ? successMeta.value + '' : '200';
+  return successMeta ? `${successMeta.value}` : '200';
 }
 
 /**
  * Return OpenAPI Responses object of given route.
  */
 export function getResponses(route: IRoute): oa.ResponsesObject {
-  const controllerName = route.controller.target.constructor.name;
-  const methods = zzz.get(controllerName);
+  const controllerName = route.controller.target.name;
+  const methods = typeInformation.get(controllerName);
   const returnType = methods.get(route.action.method).returnType.type;
 
   const contentType = getContentType(route);
@@ -256,9 +252,11 @@ export function getResponses(route: IRoute): oa.ResponsesObject {
 /**
  * Return OpenAPI specification for given routes.
  */
-export function getSpec(routes: IRoute[]): oa.OpenAPIObject {
+export function getSpec(projectPath, storage: MetadataArgsStorage, routes: IRoute[]): oa.OpenAPIObject {
+  typeInformation = getControllerMethodsTypes(storage, projectPath);
+
   return {
-    components: { schemas: {} },
+    components: { schemas },
     info: { title: '', version: '1.0.0' },
     openapi: '3.0.0',
     paths: getPaths(routes),
@@ -285,7 +283,10 @@ export function getTags(route: IRoute): string[] {
 export function expressToOpenAPIPath(expressPath: string) {
   const tokens = pathToRegexp.parse(expressPath);
   return tokens
-    .map(d => (_.isString(d) ? d : `${d.prefix}{${d.name}}`))
+    .map(d => {
+      if (_.isString(d)) return d;
+      return `${(d as Key).prefix}{${(d as Key).name}}`;
+    })
     .join('');
 }
 
@@ -298,7 +299,6 @@ function isRequired(meta: { required?: boolean }, route: IRoute) {
   return globalRequired ? meta.required !== false : !!meta.required;
 }
 
-const zzz = getControllerMethodsTypes();
 
 /**
  * Parse given parameter's OpenAPI Schema or Reference object using metadata
@@ -309,7 +309,12 @@ function getParamSchema(
 ): oa.SchemaObject | oa.ReferenceObject {
   const { explicitType, index, object, method, name } = param;
   const controllerName = object.constructor.name;
-  const methods = zzz.get(controllerName);
-  const paramType = methods.get(method).params.find(x => x.name === name);
+  const methods = typeInformation.get(controllerName);
+  if (name) {
+    const paramType = methods.get(method).params.find(x => x.name === name);
+    return paramType.type;
+  }
+
+  const paramType = methods.get(method).params.find(x => x.decorators.find(d => d.includes('@Body(')));
   return paramType.type;
 }
