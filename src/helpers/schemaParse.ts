@@ -14,7 +14,7 @@ function parsePropertyType(propType: Type, chainOfTypes: string[]) {
 
 export function toSchema(type: Type, chainOfTypes: string[]) {
   const symbol = type.getSymbol();
-  if (schemas[symbol.getEscapedName()]) return;
+  if (schemas[symbol.getEscapedName()]) return schemas[symbol.getEscapedName()];
 
   const properties = {};
   for (const prop of type.getProperties()) {
@@ -25,11 +25,12 @@ export function toSchema(type: Type, chainOfTypes: string[]) {
 
     const parsedPropertyType = parsePropertyType(propType, chainOfTypes);
 
-    properties[prop.getEscapedName()]
-      = propType.isArray()
+    properties[prop.getEscapedName()] = propType.isArray()
       ? { items: parsedPropertyType, type: 'array' }
       : parsedPropertyType;
   }
 
   schemas[symbol.getEscapedName()] = { type: 'object', properties };
+
+  return { type: 'object', properties };
 }

@@ -46,7 +46,14 @@ export function topLevel(type: Type) {
     return { type: 'string', enum: [...type.compilerType.symbol.parent.exports.keys()] };
   }
 
+  // @ts-ignore
+  if (type.getSymbol() && ['__object'].includes(type.getSymbol().getEscapedName())) {
+    // @ts-ignore
+    return toSchema(type, [type.getSymbol().getEscapedName()]);
+  }
+
   if (!type.isClassOrInterface()) return { type: typeName };
+
 
   const className = type.getSymbol().getEscapedName();
   const chainOfTypes = [className];

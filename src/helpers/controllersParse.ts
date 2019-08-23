@@ -22,7 +22,7 @@ export function getTypesFromFile(file: SourceFile) {
 }
 
 export function parseControllers(meta, classDeclarations: ClassDeclaration[]) {
-  const controllers = new Map<string, Map<string, { params, returnType }>>();
+  const controllers = new Map<string, Map<string, { params; returnType }>>();
   for (const classDecl of classDeclarations) {
     const className = classDecl.getName();
     const methodNames = meta.actions.filter(a => a.target === className);
@@ -35,7 +35,7 @@ export function parseControllers(meta, classDeclarations: ClassDeclaration[]) {
 }
 
 function parseMethods(classDeclaration: ClassDeclaration, methodNames: Array<{ route: string; method: string; type: string; target: string }>) {
-  const methods = new Map<string, { params, returnType }>();
+  const methods = new Map<string, { params; returnType }>();
   for (const { method } of methodNames) {
     const x = classDeclaration.getMethod(method);
     const params = x.getParameters().map(parseParam);

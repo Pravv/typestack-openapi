@@ -16,6 +16,10 @@ export function parseParam(x: ParameterDeclaration) {
 
 export function parseReturn(x: MethodDeclaration) {
   const typeReturn = unwrapType(x.getReturnType());
+ // typeReturn.compilerType
+  if (topLevel(typeReturn).type === '{}') {
+    console.log(topLevel(typeReturn));
+  }
 
   if (typeReturn.isArray()) {
     return { type: { items: topLevel(typeReturn), type: 'array' } };

@@ -32,6 +32,6 @@ export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectP
     const x = parseControllers(meta, controllers);
     x.forEach((v, k) => {parsedControllers.set(k, v);});
   }
-
+  //console.log(schemas);
   return parsedControllers;
 }
