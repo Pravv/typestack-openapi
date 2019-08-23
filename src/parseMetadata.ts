@@ -25,10 +25,10 @@ export interface IRoute {
  */
 export function parseRoutes(storage: MetadataArgsStorage, options: RoutingControllersOptions = {}): IRoute[] {
   return storage.actions.map(action => {
-
+    const controller: ControllerMetadataArgs = _.find(storage.controllers, { target: action.target });
     return {
       action,
-      controller: _.find(storage.controllers, { target: action.target }) as ControllerMetadataArgs,
+      controller,
       options,
       params: _.sortBy(storage.filterParamsWithTargetAndMethod(action.target, action.method), 'index'),
       responseHandlers: storage.filterResponseHandlersWithTargetAndMethod(action.target, action.method),

@@ -3,7 +3,7 @@ import { parseParam, parseReturn } from './functionParse';
 
 export function getControllersClasses(project: Project) {
   const projectDir = project.getRootDirectories()[0];
-  const controllers = projectDir.getDirectory(`${projectDir.getPath()}/src/controllers`);
+  const controllers = projectDir.getDirectory(`${projectDir.getPath()}/controllers`);
 
   const files = [];
   for (const dir of controllers.getDirectories()) {

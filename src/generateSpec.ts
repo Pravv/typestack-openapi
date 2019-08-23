@@ -2,15 +2,14 @@
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
 import * as pathToRegexp from 'path-to-regexp';
+// tslint:disable-next-line:no-duplicate-imports
 import { Key } from 'path-to-regexp';
-
 import 'reflect-metadata';
+import { MetadataArgsStorage } from 'routing-controllers';
 import { ParamMetadataArgs } from 'routing-controllers/metadata/args/ParamMetadataArgs';
-
+import { getControllerMethodsTypes, schemas } from './ast';
 import { applyOpenAPIDecorator } from './decorators';
 import { IRoute } from './index';
-import { getControllerMethodsTypes, schemas } from './ast';
-import { MetadataArgsStorage } from 'routing-controllers';
 
 let typeInformation;
 
@@ -76,7 +75,6 @@ export function getHeaderParams(route: IRoute): oa.ParameterObject[] {
   const headers: oa.ParameterObject[] = _(route.params)
     .filter({ type: 'header' })
     .map(headerMeta => {
-      console.log('header', headerMeta);
       const schema = getParamSchema(headerMeta) as oa.SchemaObject;
       return {
         in: 'header' as oa.ParameterLocation,
@@ -122,14 +120,9 @@ export function getPathParams(route: IRoute): oa.ParameterObject[] {
         schema: { type: 'string' },
       };
 
-      if (token.pattern && token.pattern !== '[^\\/]+?') {
-        param.schema = { pattern: token.pattern, type: 'string' };
-      }
-
       const meta = _.find(route.params, { name, type: 'param' });
       if (meta) {
-        const metaSchema = getParamSchema(meta);
-        param.schema = metaSchema;//= 'type' in metaSchema ? { ...param.schema, ...metaSchema } : metaSchema;
+        param.schema = getParamSchema(meta);
       }
 
       return param;
@@ -143,7 +136,7 @@ export function getQueryParams(route: IRoute): oa.ParameterObject[] {
   const queries: oa.ParameterObject[] = _(route.params)
     .filter({ type: 'query' })
     .map(queryMeta => {
-      const schema = getParamSchema(queryMeta) as oa.SchemaObject;
+      const schema = getParamSchema(queryMeta);
       return {
         in: 'query' as oa.ParameterLocation,
         name: queryMeta.name || '',
@@ -155,7 +148,7 @@ export function getQueryParams(route: IRoute): oa.ParameterObject[] {
 
   const queriesMeta = _.find(route.params, { type: 'queries' });
   if (queriesMeta) {
-    const schema = getParamSchema(queriesMeta) as oa.ReferenceObject;
+    const schema = getParamSchema(queriesMeta);
     queries.push({
       in: 'query',
       name: _.last(_.split(schema.$ref, '/')) || '',
@@ -234,9 +227,10 @@ export function getStatusCode(route: IRoute): string {
  * Return OpenAPI Responses object of given route.
  */
 export function getResponses(route: IRoute): oa.ResponsesObject {
-  const controllerName = route.controller.target.name;
+  const controllerName = route.action.target.name;
   const methods = typeInformation.get(controllerName);
-  const returnType = methods.get(route.action.method).returnType.type;
+  const method = methods.get(route.action.method);
+  const returnType = method.returnType.type;
 
   const contentType = getContentType(route);
   const successStatus = getStatusCode(route);
@@ -310,6 +304,7 @@ function getParamSchema(
   const { explicitType, index, object, method, name } = param;
   const controllerName = object.constructor.name;
   const methods = typeInformation.get(controllerName);
+
   if (name) {
     const paramType = methods.get(method).params.find(x => x.name === name);
     return paramType.type;

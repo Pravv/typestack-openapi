@@ -1,10 +1,8 @@
-import { Project } from 'ts-morph';
-
 import { cloneDeep } from 'lodash';
-import { MetadataArgsStorage } from 'routing-controllers';
-import * as util from 'util';
-import { getControllersClasses, parseControllers } from './helpers/controllersParse';
 import * as path from 'path';
+import { MetadataArgsStorage } from 'routing-controllers';
+import { Project } from 'ts-morph';
+import { getControllersClasses, parseControllers } from './helpers/controllersParse';
 
 function normalizeMeta(metaStorage) {
   const storage = cloneDeep(metaStorage);
@@ -23,10 +21,6 @@ function normalizeMeta(metaStorage) {
 
 export const schemas = { Date: { type: 'object' } };
 
-function log(...a) {
-  console.log(util.inspect(a, false, null, true));
-}
-
 export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectPath: string) {
   const meta = normalizeMeta(storage);
 
@@ -38,8 +32,6 @@ export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectP
     const x = parseControllers(meta, controllers);
     x.forEach((v, k) => {parsedControllers.set(k, v);});
   }
-
-  log(schemas);
 
   return parsedControllers;
 }
