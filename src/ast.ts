@@ -30,7 +30,7 @@ export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectP
   const parsedControllers = new Map<string, Map<string, { params; returnType }>>();
 
   const files = getControllersClasses(project);
-  for (const { controllers } of files) {
+  for (const controllers of files) {
     const x = parseControllers(meta, controllers);
     x.forEach((v, k) => parsedControllers.set(k, v));
   }
