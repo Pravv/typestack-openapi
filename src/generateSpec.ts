@@ -1,8 +1,10 @@
-// tslint:disable:no-submodule-imports
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
+
 // tslint:disable-next-line:no-duplicate-imports
+// eslint-disable-next-line import/no-duplicates
 import * as pathToRegexp from 'path-to-regexp';
+// eslint-disable-next-line import/no-duplicates
 import { Key } from 'path-to-regexp';
 import 'reflect-metadata';
 import { MetadataArgsStorage } from 'routing-controllers';

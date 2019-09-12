@@ -1,11 +1,25 @@
 import { ClassDeclaration, Project, SourceFile } from 'ts-morph';
 import { parseParam, parseReturn } from './functionParse';
 
+function parseMethods(classDeclaration: ClassDeclaration, methodNames: Array<{ route: string; method: string; type: string; target: string }>) {
+  const methods = new Map<string, { params; returnType }>();
+  for (const { method } of methodNames) {
+    const x = classDeclaration.getMethod(method);
+    const params = x.getParameters().map(parseParam);
+
+    const returnType = parseReturn(x);
+
+    const result = { params, returnType };
+    methods.set(method, result);
+  }
+
+  return methods;
+}
+
 export function getTypesFromFile(file: SourceFile) {
-  const classes = file.getClasses();
-  const interfaces = file.getInterfaces();
+  const classes: ClassDeclaration[] = file.getClasses();
   const controllers = classes.filter(c => c.getName().includes('Controller'));
-  return { classes, interfaces, controllers };
+  return controllers;
 }
 
 export function getControllersClasses(project: Project) {
@@ -32,19 +46,4 @@ export function parseControllers(meta, classDeclarations: ClassDeclaration[]) {
   }
 
   return controllers;
-}
-
-function parseMethods(classDeclaration: ClassDeclaration, methodNames: Array<{ route: string; method: string; type: string; target: string }>) {
-  const methods = new Map<string, { params; returnType }>();
-  for (const { method } of methodNames) {
-    const x = classDeclaration.getMethod(method);
-    const params = x.getParameters().map(parseParam);
-
-    const returnType = parseReturn(x);
-
-    const result = { params, returnType };
-    methods.set(method, result);
-  }
-
-  return methods;
 }

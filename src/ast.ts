@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 import * as path from 'path';
 import { MetadataArgsStorage } from 'routing-controllers';
 import { Project } from 'ts-morph';
-import { getControllersClasses, parseControllers } from './helpers/controllersParse';
+import { getControllersClasses, parseControllers } from './helpers/FileParse';
 
 function normalizeMeta(metaStorage) {
   const storage = cloneDeep(metaStorage);

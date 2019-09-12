@@ -8,10 +8,12 @@ export function parseType(type: Type, chainOfTypes) {
   const typeName = type.getText() !== 'any' ? type.getText() : 'object';
 
   if (type.isEnum()) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     return { type: 'string', enum: [...type.compilerType.aliasSymbol.exports.keys()] };
   }
   if (type.isEnumLiteral()) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     return { type: 'string', enum: [...type.compilerType.symbol.parent.exports.keys()] };
   }
@@ -28,27 +30,23 @@ export function parseType(type: Type, chainOfTypes) {
   return { $ref: `#/components/schemas/${className}` };
 }
 
-function generateSchema(type: Type) {
-
-}
-
 export function topLevel(type: Type) {
   if (type.isArray()) type = type.getArrayElementType();
 
   const typeName = type.getText() !== 'any' ? type.getText() : 'object';
 
   if (type.isEnum()) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     return { type: 'string', enum: [...type.compilerType.aliasSymbol.exports.keys()] };
   }
   if (type.isEnumLiteral()) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     return { type: 'string', enum: [...type.compilerType.symbol.parent.exports.keys()] };
   }
 
-  // @ts-ignore
   if (type.getSymbol() && ['__object'].includes(type.getSymbol().getEscapedName())) {
-    // @ts-ignore
     return toSchema(type, [type.getSymbol().getEscapedName()]);
   }
 
