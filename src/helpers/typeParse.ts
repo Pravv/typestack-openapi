@@ -54,7 +54,6 @@ export function topLevel(type: Type) {
 
   if (!type.isClassOrInterface()) return { type: typeName };
 
-
   const className = type.getSymbol().getEscapedName();
   const chainOfTypes = [className];
 

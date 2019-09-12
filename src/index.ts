@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
-import {
-  MetadataArgsStorage,
-} from 'routing-controllers';
+import { MetadataArgsStorage } from 'routing-controllers';
 
 import { getSpec } from './generateSpec';
 import { parseRoutes } from './parseMetadata';

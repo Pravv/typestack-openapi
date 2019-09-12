@@ -1,7 +1,6 @@
 import { MethodDeclaration, ParameterDeclaration } from 'ts-morph';
 import { topLevel, unwrapType } from './typeParse';
 
-
 export function parseParam(x: ParameterDeclaration) {
   const type = unwrapType(x.getType());
   const typeText = topLevel(type);
@@ -16,7 +15,7 @@ export function parseParam(x: ParameterDeclaration) {
 
 export function parseReturn(x: MethodDeclaration) {
   const typeReturn = unwrapType(x.getReturnType());
- // typeReturn.compilerType
+  // typeReturn.compilerType
   if (topLevel(typeReturn).type === '{}') {
     console.log(topLevel(typeReturn));
   }
@@ -26,5 +25,4 @@ export function parseReturn(x: MethodDeclaration) {
   }
 
   return { type: topLevel(typeReturn) };
-
 }

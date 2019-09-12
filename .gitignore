@@ -1,10 +1,5 @@
-npm-debug*
-build
-node_modules
-coverage
-.vscode/
+build/
+node_modules/
 *.key
 *.secret
-yarn-error.log
 .idea/
-dist/

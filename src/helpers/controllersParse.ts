@@ -1,6 +1,13 @@
 import { ClassDeclaration, Project, SourceFile } from 'ts-morph';
 import { parseParam, parseReturn } from './functionParse';
 
+export function getTypesFromFile(file: SourceFile) {
+  const classes = file.getClasses();
+  const interfaces = file.getInterfaces();
+  const controllers = classes.filter(c => c.getName().includes('Controller'));
+  return { classes, interfaces, controllers };
+}
+
 export function getControllersClasses(project: Project) {
   const projectDir = project.getRootDirectories()[0];
   const controllers = projectDir.getDirectory(`${projectDir.getPath()}/controllers`);
@@ -12,13 +19,6 @@ export function getControllersClasses(project: Project) {
   files.push(...controllers.getSourceFiles());
 
   return files.map(getTypesFromFile);
-}
-
-export function getTypesFromFile(file: SourceFile) {
-  const classes = file.getClasses();
-  const interfaces = file.getInterfaces();
-  const controllers = classes.filter(c => c.getName().includes('Controller'));
-  return { classes, interfaces, controllers };
 }
 
 export function parseControllers(meta, classDeclarations: ClassDeclaration[]) {

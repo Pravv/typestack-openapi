@@ -1,10 +1,5 @@
 import * as _ from 'lodash';
-import {
-  OperationObject,
-  ReferenceObject,
-  ResponsesObject,
-  SchemaObject,
-} from 'openapi3-ts';
+import { OperationObject, ReferenceObject, ResponsesObject, SchemaObject } from 'openapi3-ts';
 import 'reflect-metadata';
 
 import { getContentType, getStatusCode, IRoute } from './index';
@@ -44,12 +39,12 @@ export function OpenAPI(spec: OpenAPIParam) {
  */
 export function applyOpenAPIDecorator(
   originalOperation: OperationObject,
-  route: IRoute,
+  route: IRoute
 ): OperationObject {
   const { action } = route;
   const openAPIParams = [
     ...getOpenAPIMetadata(action.target),
-    ...getOpenAPIMetadata(action.target.prototype, action.method),
+    ...getOpenAPIMetadata(action.target.prototype, action.method)
   ];
 
   // @ts-ignore
@@ -76,7 +71,7 @@ function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
 function setOpenAPIMetadata(
   value: OpenAPIParam[],
   target: object,
-  key?: string,
+  key?: string
 ) {
   return key
     ? Reflect.defineMetadata(OPEN_API_KEY, value, target.constructor, key)
@@ -93,7 +88,7 @@ export function ResponseSchema(
     description?: string;
     statusCode?: string | number;
     isArray?: boolean;
-  } = {},
+  } = {}
 ) {
   const setResponseSchema = (source: OperationObject, route: IRoute) => {
     const contentType = options.contentType || getContentType(route);
@@ -116,8 +111,8 @@ export function ResponseSchema(
       const responses: ResponsesObject = {
         [statusCode]: {
           content: { [contentType]: { schema } },
-          description,
-        },
+          description
+        }
       };
 
       return _.merge({}, source, { responses });

@@ -1,9 +1,6 @@
 // tslint:disable:no-submodule-imports
 import * as _ from 'lodash';
-import {
-  MetadataArgsStorage,
-  RoutingControllersOptions,
-} from 'routing-controllers';
+import { MetadataArgsStorage, RoutingControllersOptions } from 'routing-controllers';
 import { ActionMetadataArgs } from 'routing-controllers/metadata/args/ActionMetadataArgs';
 import { ControllerMetadataArgs } from 'routing-controllers/metadata/args/ControllerMetadataArgs';
 import { ParamMetadataArgs } from 'routing-controllers/metadata/args/ParamMetadataArgs';
@@ -13,11 +10,11 @@ import { ResponseHandlerMetadataArgs } from 'routing-controllers/metadata/args/R
  * All the context for a single route.
  */
 export interface IRoute {
-  readonly action: ActionMetadataArgs
-  readonly controller: ControllerMetadataArgs
-  readonly options: RoutingControllersOptions
-  readonly params: ParamMetadataArgs[]
-  readonly responseHandlers: ResponseHandlerMetadataArgs[]
+  readonly action: ActionMetadataArgs;
+  readonly controller: ControllerMetadataArgs;
+  readonly options: RoutingControllersOptions;
+  readonly params: ParamMetadataArgs[];
+  readonly responseHandlers: ResponseHandlerMetadataArgs[];
 }
 
 /**
@@ -31,7 +28,7 @@ export function parseRoutes(storage: MetadataArgsStorage, options: RoutingContro
       controller,
       options,
       params: _.sortBy(storage.filterParamsWithTargetAndMethod(action.target, action.method), 'index'),
-      responseHandlers: storage.filterResponseHandlersWithTargetAndMethod(action.target, action.method),
+      responseHandlers: storage.filterResponseHandlersWithTargetAndMethod(action.target, action.method)
     };
   });
 }

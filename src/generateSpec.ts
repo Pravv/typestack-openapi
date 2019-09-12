@@ -1,8 +1,8 @@
 // tslint:disable:no-submodule-imports
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
-import * as pathToRegexp from 'path-to-regexp';
 // tslint:disable-next-line:no-duplicate-imports
+import * as pathToRegexp from 'path-to-regexp';
 import { Key } from 'path-to-regexp';
 import 'reflect-metadata';
 import { MetadataArgsStorage } from 'routing-controllers';
@@ -17,9 +17,9 @@ let typeInformation;
 export function getFullExpressPath(route: IRoute): string {
   const { action, controller, options } = route;
   return (
-    (options.routePrefix || '')
-    + (controller.route || '')
-    + (action.route || '')
+    (options.routePrefix || '') +
+    (controller.route || '') +
+    (action.route || '')
   );
 }
 
@@ -39,12 +39,12 @@ export function getOperation(route: IRoute): oa.OperationObject {
     parameters: [
       ...getHeaderParams(route),
       ...getPathParams(route),
-      ...getQueryParams(route),
+      ...getQueryParams(route)
     ],
     requestBody: getRequestBody(route) || undefined,
     responses: getResponses(route),
     summary: getSummary(route),
-    tags: getTags(route),
+    tags: getTags(route)
   };
 
   const cleanedOperation = _.omitBy(operation, _.isEmpty) as oa.OperationObject;
@@ -80,7 +80,7 @@ export function getHeaderParams(route: IRoute): oa.ParameterObject[] {
         in: 'header' as oa.ParameterLocation,
         name: headerMeta.name || '',
         required: isRequired(headerMeta, route),
-        schema,
+        schema
       };
     })
     .value();
@@ -92,7 +92,7 @@ export function getHeaderParams(route: IRoute): oa.ParameterObject[] {
       in: 'header',
       name: _.last(_.split(schema.$ref, '/')) || '',
       required: isRequired(headersMeta, route),
-      schema,
+      schema
     });
   }
 
@@ -117,7 +117,7 @@ export function getPathParams(route: IRoute): oa.ParameterObject[] {
         in: 'path',
         name,
         required: !token.optional,
-        schema: { type: 'string' },
+        schema: { type: 'string' }
       };
 
       const meta = _.find(route.params, { name, type: 'param' });
@@ -141,7 +141,7 @@ export function getQueryParams(route: IRoute): oa.ParameterObject[] {
         in: 'query' as oa.ParameterLocation,
         name: queryMeta.name || '',
         required: isRequired(queryMeta, route),
-        schema,
+        schema
       };
     })
     .value();
@@ -153,7 +153,7 @@ export function getQueryParams(route: IRoute): oa.ParameterObject[] {
       in: 'query',
       name: _.last(_.split(schema.$ref, '/')) || '',
       required: isRequired(queriesMeta, route),
-      schema,
+      schema
     });
   }
 
@@ -171,13 +171,13 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
         ...acc,
         properties: {
           ...acc.properties,
-          [d.name!]: getParamSchema(d),
+          [d.name!]: getParamSchema(d)
         },
         required: isRequired(d, route)
           ? [...(acc.required || []), d.name!]
-          : acc.required,
+          : acc.required
       }),
-      { properties: {}, required: [], type: 'object' },
+      { properties: {}, required: [], type: 'object' }
     )
     : null;
 
@@ -192,11 +192,11 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
         'application/json': {
           schema: bodyParamsSchema
             ? { allOf: [bodySchema, bodyParamsSchema] }
-            : bodySchema,
-        },
+            : bodySchema
+        }
       },
       description: _.last(_.split($ref, '/')),
-      required: isRequired(bodyMeta, route),
+      required: isRequired(bodyMeta, route)
     };
   }
   if (bodyParamsSchema) {
@@ -238,8 +238,8 @@ export function getResponses(route: IRoute): oa.ResponsesObject {
   return {
     [successStatus]: {
       content: { [contentType]: { schema: returnType } },
-      description: 'Successful response',
-    },
+      description: 'Successful response'
+    }
   };
 }
 
@@ -253,7 +253,7 @@ export function getSpec(projectPath, storage: MetadataArgsStorage, routes: IRout
     components: { schemas },
     info: { title: '', version: '1.0.0' },
     openapi: '3.0.0',
-    paths: getPaths(routes),
+    paths: getPaths(routes)
   };
 }
 
@@ -293,13 +293,12 @@ function isRequired(meta: { required?: boolean }, route: IRoute) {
   return globalRequired ? meta.required !== false : !!meta.required;
 }
 
-
 /**
  * Parse given parameter's OpenAPI Schema or Reference object using metadata
  * reflection.
  */
 function getParamSchema(
-  param: ParamMetadataArgs,
+  param: ParamMetadataArgs
 ): oa.SchemaObject | oa.ReferenceObject {
   const { explicitType, index, object, method, name } = param;
   const controllerName = object.constructor.name;

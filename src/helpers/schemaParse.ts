@@ -19,7 +19,7 @@ export function toSchema(type: Type, chainOfTypes: string[]) {
   const properties = {};
   for (const prop of type.getProperties()) {
     const propTypeKind = prop.getValueDeclaration().getKind();
-    if ([SyntaxKind.MethodDeclaration /*SyntaxKind.GetAccessor*/].includes(propTypeKind)) continue;
+    if ([SyntaxKind.MethodDeclaration].includes(propTypeKind)) continue;
 
     const propType = unwrapType(prop.getDeclarations()[0].getType());
 

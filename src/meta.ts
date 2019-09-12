@@ -4,40 +4,40 @@ export default {
     {
       type: 'json',
       target: 'AdminCrateController',
-      route: '/admin/crate',
+      route: '/admin/crate'
     },
     {
       type: 'json',
       target: 'AdminSupportController',
-      route: '/admin/support',
+      route: '/admin/support'
     },
     { type: 'json', target: 'AdminController', route: '/admin' },
     { type: 'json', target: 'AuthController', route: '/auth' },
     {
       type: 'json',
       target: 'CaseCreatorController',
-      route: '/case-creator',
+      route: '/case-creator'
     },
     { type: 'json', target: 'ChatController', route: '/chat' },
     { type: 'json', target: 'CrateController', route: '/crate' },
     {
       type: 'json',
       target: 'LeaderbordController',
-      route: '/leaderboard',
+      route: '/leaderboard'
     },
     {
       type: 'json',
       target: 'ReferralController',
-      route: '/referral',
+      route: '/referral'
     },
     {
       type: 'json',
       target: 'StatisticsController',
-      route: '/statistics',
+      route: '/statistics'
     },
     { type: 'json', target: 'SupportController', route: '/support' },
     { type: 'json', target: 'TaskController', route: '/task' },
-    { type: 'json', target: 'UserController', route: '/user' },
+    { type: 'json', target: 'UserController', route: '/user' }
   ],
   middlewares: [],
   interceptors: [],
@@ -46,20 +46,20 @@ export default {
       target: 'CrateController',
       method: 'listCrates',
       middleware: '',
-      afterAction: false,
+      afterAction: false
     },
     {
       target: 'CrateController',
       method: 'getCrate',
       middleware: '',
-      afterAction: false,
+      afterAction: false
     },
     {
       target: 'CrateController',
       method: 'openFreeCrate',
       middleware: 'verifyCaptcha',
-      afterAction: false,
-    },
+      afterAction: false
+    }
   ],
   useInterceptors: [],
   actions: [
@@ -67,302 +67,302 @@ export default {
       type: 'get',
       target: 'AdminCrateController',
       method: 'getCrates',
-      route: '/',
+      route: '/'
     },
     {
       type: 'get',
       target: 'AdminCrateController',
       method: 'getCrate',
-      route: '/details/:crateId',
+      route: '/details/:crateId'
     },
     {
       type: 'get',
       target: 'AdminSupportController',
       method: 'find',
-      route: '/',
+      route: '/'
     },
     {
       type: 'post',
       target: 'AdminSupportController',
       method: 'respond',
-      route: '/:ticketId',
+      route: '/:ticketId'
     },
     {
       type: 'patch',
       target: 'AdminSupportController',
       method: 'update',
-      route: '/:ticketId',
+      route: '/:ticketId'
     },
     {
       type: 'get',
       target: 'AdminController',
       method: 'getSettings',
-      route: '/setting',
+      route: '/setting'
     },
     {
       type: 'post',
       target: 'AdminController',
       method: 'setSetting',
-      route: '/setting/:key',
+      route: '/setting/:key'
     },
     {
       type: 'post',
       target: 'AuthController',
       method: 'register',
-      route: '/register',
+      route: '/register'
     },
     {
       type: 'post',
       target: 'AuthController',
       method: 'login',
-      route: '/login',
+      route: '/login'
     },
     {
       type: 'post',
       target: 'AuthController',
       method: 'logout',
-      route: '/logout',
+      route: '/logout'
     },
     {
       type: 'get',
       target: 'AuthController',
       method: 'socialRedirect',
-      route: '/social/:provider',
+      route: '/social/:provider'
     },
     {
       type: 'post',
       target: 'AuthController',
       method: 'socialLogin',
-      route: '/social/:provider',
+      route: '/social/:provider'
     },
     {
       type: 'get',
       target: 'CaseCreatorController',
       method: 'getAvailableItems',
-      route: '/items',
+      route: '/items'
     },
     {
       type: 'post',
       target: 'CaseCreatorController',
       method: 'create',
-      route: '/create',
+      route: '/create'
     },
     {
       type: 'patch',
       target: 'CaseCreatorController',
       method: 'update',
-      route: '/:crateId',
+      route: '/:crateId'
     },
     {
       type: 'get',
       target: 'ChatController',
       method: 'getChannels',
-      route: '/channels',
+      route: '/channels'
     },
     {
       type: 'get',
       target: 'ChatController',
       method: 'getMessages',
-      route: '/message/:channel',
+      route: '/message/:channel'
     },
     {
       type: 'post',
       target: 'ChatController',
       method: 'addChannel',
-      route: '/new-channel',
+      route: '/new-channel'
     },
     {
       type: 'post',
       target: 'ChatController',
       method: 'send',
-      route: '/message/:channel',
+      route: '/message/:channel'
     },
     {
       type: 'delete',
       target: 'ChatController',
       method: 'remove',
-      route: '/message/:channel',
+      route: '/message/:channel'
     },
     {
       type: 'get',
       target: 'CrateController',
       method: 'listCrates',
-      route: '/',
+      route: '/'
     },
     {
       type: 'get',
       target: 'CrateController',
       method: 'getCratesRequirements',
-      route: '/requirements',
+      route: '/requirements'
     },
     {
       type: 'get',
       target: 'CrateController',
       method: 'getCrateRequirements',
-      route: '/requirements/:crateId',
+      route: '/requirements/:crateId'
     },
     {
       type: 'get',
       target: 'CrateController',
       method: 'getCrate',
-      route: '/details/:crateSlug',
+      route: '/details/:crateSlug'
     },
     {
       type: 'post',
       target: 'CrateController',
       method: 'openCrate',
-      route: '/:crateId',
+      route: '/:crateId'
     },
     {
       type: 'post',
       target: 'CrateController',
       method: 'openFreeCrate',
-      route: '/free/:crateId',
+      route: '/free/:crateId'
     },
     {
       type: 'post',
       target: 'CrateController',
       method: 'testSpin',
-      route: '/test/:crateId',
+      route: '/test/:crateId'
     },
     {
       type: 'get',
       target: 'LeaderbordController',
       method: 'getWeek',
-      route: '/week',
+      route: '/week'
     },
     {
       type: 'get',
       target: 'LeaderbordController',
       method: 'getDay',
-      route: '/day',
+      route: '/day'
     },
     {
       type: 'get',
       target: 'LeaderbordController',
       method: 'getAllTime',
-      route: '/all-time',
+      route: '/all-time'
     },
     {
       type: 'get',
       target: 'ReferralController',
       method: 'getReferral',
-      route: '/',
+      route: '/'
     },
     {
       type: 'post',
       target: 'ReferralController',
       method: 'createReferral',
-      route: '/',
+      route: '/'
     },
     {
       type: 'post',
       target: 'ReferralController',
       method: 'useReferral',
-      route: '/use/:referralCode',
+      route: '/use/:referralCode'
     },
     {
       type: 'post',
       target: 'ReferralController',
       method: 'addClick',
-      route: '/click/:referralCode',
+      route: '/click/:referralCode'
     },
     {
       type: 'post',
       target: 'ReferralController',
       method: 'claimReferralFunds',
-      route: '/collect',
+      route: '/collect'
     },
     {
       type: 'get',
       target: 'StatisticsController',
       method: 'loadStatistics',
-      route: '/',
+      route: '/'
     },
     {
       type: 'get',
       target: 'StatisticsController',
       method: 'loadLatestOpenings',
-      route: '/latest-openings',
+      route: '/latest-openings'
     },
     {
       type: 'get',
       target: 'SupportController',
       method: 'find',
-      route: '/',
+      route: '/'
     },
     {
       type: 'post',
       target: 'SupportController',
       method: 'create',
-      route: '/',
+      route: '/'
     },
     {
       type: 'post',
       target: 'SupportController',
       method: 'respond',
-      route: '/:ticketId',
+      route: '/:ticketId'
     },
     {
       type: 'post',
       target: 'SupportController',
       method: 'close',
-      route: '/:ticketId/close',
+      route: '/:ticketId/close'
     },
     {
       type: 'get',
       target: 'TaskController',
       method: 'gatherStatistics',
-      route: '/statistics/global',
+      route: '/statistics/global'
     },
     {
       type: 'get',
       target: 'TaskController',
       method: 'collectLandingStatistics',
-      route: '/statistics/landing',
+      route: '/statistics/landing'
     },
     {
       type: 'get',
       target: 'UserController',
       method: 'getUser',
-      route: '/',
+      route: '/'
     },
     {
       type: 'patch',
       target: 'UserController',
       method: 'patchUser',
-      route: '/',
+      route: '/'
     },
     {
       type: 'get',
       target: 'UserController',
       method: 'getServerHash',
-      route: '/hash',
+      route: '/hash'
     },
     {
       type: 'get',
       target: 'UserController',
       method: 'getUserInventory',
-      route: '/inventory',
+      route: '/inventory'
     },
     {
       type: 'post',
       target: 'UserController',
       method: 'sellInventoryItem',
-      route: '/inventory/:itemId/sell',
+      route: '/inventory/:itemId/sell'
     },
     {
       type: 'get',
       target: 'UserController',
       method: 'getTransactions',
-      route: '/transactions',
+      route: '/transactions'
     },
     {
       type: 'get',
       target: 'UserController',
       method: 'getOpenings',
-      route: '/openings',
-    },
+      route: '/openings'
+    }
   ],
   params: [
     {
@@ -373,7 +373,7 @@ export default {
       name: 'crateId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'body-param',
@@ -385,7 +385,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -395,7 +395,7 @@ export default {
       name: 'ticketId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -403,7 +403,7 @@ export default {
       method: 'respond',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body',
@@ -415,7 +415,7 @@ export default {
       classTransform: undefined,
       validate: undefined,
       explicitType: undefined,
-      extraOptions: undefined,
+      extraOptions: undefined
     },
     {
       type: 'param',
@@ -425,7 +425,7 @@ export default {
       name: 'ticketId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'body-param',
@@ -437,7 +437,7 @@ export default {
       required: undefined,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -447,7 +447,7 @@ export default {
       name: 'key',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'body',
@@ -459,7 +459,7 @@ export default {
       classTransform: undefined,
       validate: undefined,
       explicitType: undefined,
-      extraOptions: undefined,
+      extraOptions: undefined
     },
     {
       type: 'session',
@@ -470,7 +470,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'body-param',
@@ -482,7 +482,7 @@ export default {
       required: undefined,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'body-param',
@@ -494,7 +494,7 @@ export default {
       required: undefined,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'session',
@@ -505,7 +505,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'session',
@@ -516,7 +516,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'param',
@@ -526,7 +526,7 @@ export default {
       name: 'provider',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'context',
@@ -534,7 +534,7 @@ export default {
       method: 'socialLogin',
       index: 2,
       parse: false,
-      required: false,
+      required: false
     },
     {
       type: 'session',
@@ -545,7 +545,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'param',
@@ -555,7 +555,7 @@ export default {
       name: 'provider',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'body',
@@ -567,7 +567,7 @@ export default {
       classTransform: undefined,
       validate: { whitelist: true },
       explicitType: undefined,
-      extraOptions: undefined,
+      extraOptions: undefined
     },
     {
       type: 'current-user',
@@ -575,7 +575,7 @@ export default {
       method: 'create',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body',
@@ -587,7 +587,7 @@ export default {
       classTransform: undefined,
       validate: { whitelist: true },
       explicitType: undefined,
-      extraOptions: undefined,
+      extraOptions: undefined
     },
     {
       type: 'param',
@@ -597,7 +597,7 @@ export default {
       name: 'crateId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -605,7 +605,7 @@ export default {
       method: 'update',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'param',
@@ -615,7 +615,7 @@ export default {
       name: 'channel',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'body-param',
@@ -627,7 +627,7 @@ export default {
       required: undefined,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'body-param',
@@ -639,7 +639,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -649,7 +649,7 @@ export default {
       name: 'channel',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -657,7 +657,7 @@ export default {
       method: 'send',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body-param',
@@ -669,7 +669,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -679,7 +679,7 @@ export default {
       name: 'channel',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -687,7 +687,7 @@ export default {
       method: 'getCratesRequirements',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'param',
@@ -697,7 +697,7 @@ export default {
       name: 'crateId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -705,7 +705,7 @@ export default {
       method: 'getCrateRequirements',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'param',
@@ -715,7 +715,7 @@ export default {
       name: 'crateSlug',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'body-param',
@@ -727,7 +727,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -737,7 +737,7 @@ export default {
       name: 'crateId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'session',
@@ -748,7 +748,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'current-user',
@@ -756,7 +756,7 @@ export default {
       method: 'openCrate',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body-param',
@@ -768,7 +768,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -778,7 +778,7 @@ export default {
       name: 'crateId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'session',
@@ -789,7 +789,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'current-user',
@@ -797,7 +797,7 @@ export default {
       method: 'openFreeCrate',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body-param',
@@ -809,7 +809,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -819,7 +819,7 @@ export default {
       name: 'crateId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'session',
@@ -830,7 +830,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'current-user',
@@ -838,7 +838,7 @@ export default {
       method: 'testSpin',
       index: 0,
       parse: false,
-      required: undefined,
+      required: undefined
     },
     {
       type: 'current-user',
@@ -846,7 +846,7 @@ export default {
       method: 'getWeek',
       index: 0,
       parse: false,
-      required: undefined,
+      required: undefined
     },
     {
       type: 'current-user',
@@ -854,7 +854,7 @@ export default {
       method: 'getDay',
       index: 0,
       parse: false,
-      required: undefined,
+      required: undefined
     },
     {
       type: 'current-user',
@@ -862,7 +862,7 @@ export default {
       method: 'getAllTime',
       index: 0,
       parse: false,
-      required: undefined,
+      required: undefined
     },
     {
       type: 'current-user',
@@ -870,7 +870,7 @@ export default {
       method: 'getReferral',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'current-user',
@@ -878,7 +878,7 @@ export default {
       method: 'createReferral',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'param',
@@ -888,7 +888,7 @@ export default {
       name: 'referralCode',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -896,7 +896,7 @@ export default {
       method: 'useReferral',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'session',
@@ -907,7 +907,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'param',
@@ -917,7 +917,7 @@ export default {
       name: 'referralCode',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -925,7 +925,7 @@ export default {
       method: 'claimReferralFunds',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'current-user',
@@ -933,7 +933,7 @@ export default {
       method: 'find',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body-param',
@@ -945,7 +945,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'body-param',
@@ -957,7 +957,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'current-user',
@@ -965,7 +965,7 @@ export default {
       method: 'create',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body-param',
@@ -977,7 +977,7 @@ export default {
       required: true,
       explicitType: undefined,
       classTransform: undefined,
-      validate: undefined,
+      validate: undefined
     },
     {
       type: 'param',
@@ -987,7 +987,7 @@ export default {
       name: 'ticketId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -995,7 +995,7 @@ export default {
       method: 'respond',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'param',
@@ -1005,7 +1005,7 @@ export default {
       name: 'ticketId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -1013,7 +1013,7 @@ export default {
       method: 'close',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'current-user',
@@ -1021,7 +1021,7 @@ export default {
       method: 'getUser',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'body',
@@ -1033,7 +1033,7 @@ export default {
       classTransform: undefined,
       validate: undefined,
       explicitType: undefined,
-      extraOptions: undefined,
+      extraOptions: undefined
     },
     {
       type: 'current-user',
@@ -1041,7 +1041,7 @@ export default {
       method: 'patchUser',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'session',
@@ -1052,7 +1052,7 @@ export default {
       parse: false,
       required: true,
       classTransform: undefined,
-      validate: false,
+      validate: false
     },
     {
       type: 'current-user',
@@ -1060,7 +1060,7 @@ export default {
       method: 'getUserInventory',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'param',
@@ -1070,7 +1070,7 @@ export default {
       name: 'itemId',
       parse: false,
       required: true,
-      classTransform: undefined,
+      classTransform: undefined
     },
     {
       type: 'current-user',
@@ -1078,7 +1078,7 @@ export default {
       method: 'sellInventoryItem',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'current-user',
@@ -1086,7 +1086,7 @@ export default {
       method: 'getTransactions',
       index: 0,
       parse: false,
-      required: true,
+      required: true
     },
     {
       type: 'current-user',
@@ -1094,177 +1094,177 @@ export default {
       method: 'getOpenings',
       index: 0,
       parse: false,
-      required: true,
-    },
+      required: true
+    }
   ],
   responseHandlers: [
     {
       type: 'response-class-transform-options',
       value: { groups: ['admin'] },
       target: 'AdminCrateController',
-      method: 'getCrates',
+      method: 'getCrates'
     },
     {
       type: 'authorized',
       target: 'AdminCrateController',
       method: 'getCrates',
-      value: [2],
+      value: [2]
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['admin'] },
       target: 'AdminCrateController',
-      method: 'getCrate',
+      method: 'getCrate'
     },
     {
       type: 'authorized',
       target: 'AdminCrateController',
       method: 'getCrate',
-      value: [2],
+      value: [2]
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['admin'] },
       target: 'AdminSupportController',
-      method: 'find',
+      method: 'find'
     },
     {
       type: 'authorized',
       target: 'AdminSupportController',
       method: 'find',
-      value: [2],
+      value: [2]
     },
     {
       type: 'authorized',
       target: 'AdminSupportController',
       method: 'respond',
-      value: [2],
+      value: [2]
     },
     {
       type: 'authorized',
       target: 'AdminSupportController',
       method: 'update',
-      value: [2],
+      value: [2]
     },
     {
       type: 'authorized',
       target: 'AdminController',
       method: 'getSettings',
-      value: [2],
+      value: [2]
     },
     {
       type: 'on-undefined',
       target: 'AdminController',
       method: 'setSetting',
-      value: 200,
+      value: 200
     },
     {
       type: 'authorized',
       target: 'AdminController',
       method: 'setSetting',
-      value: [2],
+      value: [2]
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'AuthController',
-      method: 'register',
+      method: 'register'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'AuthController',
-      method: 'login',
+      method: 'login'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['admin'] },
       target: 'CaseCreatorController',
-      method: 'getAvailableItems',
+      method: 'getAvailableItems'
     },
     {
       type: 'authorized',
       target: 'CaseCreatorController',
       method: 'update',
-      value: [2],
+      value: [2]
     },
     {
       type: 'authorized',
       target: 'ChatController',
       method: 'addChannel',
-      value: [2],
+      value: [2]
     },
     {
       type: 'authorized',
       target: 'ChatController',
       method: 'remove',
-      value: [2],
+      value: [2]
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['crate-items'] },
       target: 'CrateController',
-      method: 'getCrate',
+      method: 'getCrate'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['opening'] },
       target: 'CrateController',
-      method: 'openCrate',
+      method: 'openCrate'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'CrateController',
-      method: 'openFreeCrate',
+      method: 'openFreeCrate'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['opening'] },
       target: 'CrateController',
-      method: 'testSpin',
+      method: 'testSpin'
     },
     {
       type: 'on-undefined',
       target: 'TaskController',
       method: 'collectLandingStatistics',
-      value: 204,
+      value: 204
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'UserController',
-      method: 'getUser',
+      method: 'getUser'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'UserController',
-      method: 'patchUser',
+      method: 'patchUser'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'UserController',
-      method: 'getUserInventory',
+      method: 'getUserInventory'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'UserController',
-      method: 'sellInventoryItem',
+      method: 'sellInventoryItem'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'UserController',
-      method: 'getTransactions',
+      method: 'getTransactions'
     },
     {
       type: 'response-class-transform-options',
       value: { groups: ['self'] },
       target: 'UserController',
-      method: 'getOpenings',
-    },
-  ],
+      method: 'getOpenings'
+    }
+  ]
 };

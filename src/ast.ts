@@ -26,12 +26,14 @@ export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectP
 
   const project = new Project();
   project.addExistingSourceFiles(path.join(projectPath, '**/*.ts'));
-  const parsedControllers = new Map<string, Map<string, { params, returnType }>>();
+
+  const parsedControllers = new Map<string, Map<string, { params; returnType }>>();
+
   const files = getControllersClasses(project);
   for (const { controllers } of files) {
     const x = parseControllers(meta, controllers);
-    x.forEach((v, k) => {parsedControllers.set(k, v);});
+    x.forEach((v, k) => parsedControllers.set(k, v));
   }
-  //console.log(schemas);
+  // console.log(schemas);
   return parsedControllers;
 }
