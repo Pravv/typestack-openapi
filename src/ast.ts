@@ -3,8 +3,9 @@ import * as path from 'path';
 import { MetadataArgsStorage } from 'routing-controllers';
 import { Project } from 'ts-morph';
 import { getControllersClasses, parseControllers } from './helpers/FileParse';
+import { IRoute } from './parseMetadata';
 
-function normalizeMeta(metaStorage) {
+function normalizeMeta(metaStorage): MetadataArgsStorage {
   const storage = cloneDeep(metaStorage);
   for (const key of Object.keys(storage)) {
     storage[key] = storage[key].map(v => {
@@ -21,19 +22,13 @@ function normalizeMeta(metaStorage) {
 
 export const schemas = { Date: { type: 'object' } };
 
-export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectPath: string) {
+export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectPath: string, routes: IRoute[]) {
   const meta = normalizeMeta(storage);
 
   const project = new Project();
   project.addExistingSourceFiles(path.join(projectPath, '**/*.ts'));
 
-  const parsedControllers = new Map<string, Map<string, { params; returnType }>>();
+  const controllers = getControllersClasses(project, meta);
 
-  const files = getControllersClasses(project);
-  for (const controllers of files) {
-    const x = parseControllers(meta, controllers);
-    x.forEach((v, k) => parsedControllers.set(k, v));
-  }
-  // console.log(schemas);
-  return parsedControllers;
+  return parseControllers(meta, controllers);
 }

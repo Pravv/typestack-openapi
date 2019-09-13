@@ -1,4 +1,4 @@
-import { SyntaxKind, Type } from 'ts-morph';
+import { SyntaxKind, Type, Decorator, ClassDeclaration } from 'ts-morph';
 import { schemas } from '../ast';
 import { parseType, unwrapType } from './typeParse';
 
@@ -12,16 +12,26 @@ function parsePropertyType(propType: Type, chainOfTypes: string[]) {
   return parseType(propType, chainOfTypes);
 }
 
+function parseDecorator(decorator: Decorator) {
+
+}
+
 export function toSchema(type: Type, chainOfTypes: string[]) {
   const symbol = type.getSymbol();
   if (schemas[symbol.getEscapedName()]) return schemas[symbol.getEscapedName()];
-
   const properties = {};
   for (const prop of type.getProperties()) {
-    const propTypeKind = prop.getValueDeclaration().getKind();
-    if ([SyntaxKind.MethodDeclaration].includes(propTypeKind)) continue;
+    const declaration = prop.getValueDeclaration();
+    // const decorators = declaration.compilerNode.decorators;
 
-    const propType = unwrapType(prop.getDeclarations()[0].getType());
+    // for (const decorator of decorators) {
+    // @ts-ignore
+    // console.log(decorator.expression.arguments);
+    // }
+
+    if ([SyntaxKind.MethodDeclaration].includes(declaration.getKind())) continue;
+
+    const propType = unwrapType(declaration.getType());
 
     const parsedPropertyType = parsePropertyType(propType, chainOfTypes);
 

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
 import { MetadataArgsStorage } from 'routing-controllers';

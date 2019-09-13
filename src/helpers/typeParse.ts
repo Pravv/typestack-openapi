@@ -2,7 +2,13 @@ import { Type } from 'ts-morph';
 import { schemas } from '../ast';
 import { toSchema } from './schemaParse';
 
-export function parseType(type: Type, chainOfTypes) {
+export interface SwaggerType {
+  type?: string;
+  $ref?: string;
+  enum?: string[];
+}
+
+export function parseType(type: Type, chainOfTypes): SwaggerType {
   if (type.isArray()) type = type.getArrayElementType();
 
   const typeName = type.getText() !== 'any' ? type.getText() : 'object';
@@ -26,11 +32,12 @@ export function parseType(type: Type, chainOfTypes) {
     chainOfTypes.push(className);
     toSchema(type, chainOfTypes);
   }
+  console.log('parseType', type.getText());
 
   return { $ref: `#/components/schemas/${className}` };
 }
 
-export function topLevel(type: Type) {
+export function topLevel(type: Type): SwaggerType {
   if (type.isArray()) type = type.getArrayElementType();
 
   const typeName = type.getText() !== 'any' ? type.getText() : 'object';
@@ -54,6 +61,8 @@ export function topLevel(type: Type) {
 
   const className = type.getSymbol().getEscapedName();
   const chainOfTypes = [className];
+
+  console.log('topLevel', type.getText());
 
   if (!schemas[className]) {
     toSchema(type, chainOfTypes);

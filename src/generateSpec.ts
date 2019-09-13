@@ -1,11 +1,7 @@
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
-
-// tslint:disable-next-line:no-duplicate-imports
-// eslint-disable-next-line import/no-duplicates
 import * as pathToRegexp from 'path-to-regexp';
-// eslint-disable-next-line import/no-duplicates
-import { Key } from 'path-to-regexp';
+
 import 'reflect-metadata';
 import { MetadataArgsStorage } from 'routing-controllers';
 import { ParamMetadataArgs } from 'routing-controllers/metadata/args/ParamMetadataArgs';
@@ -15,24 +11,34 @@ import { IRoute } from './index';
 
 let typeInformation;
 
-/** Return full Express path of given route. */
-export function getFullExpressPath(route: IRoute): string {
-  const { action, controller, options } = route;
-  return (
-    (options.routePrefix || '') +
-    (controller.route || '') +
-    (action.route || '')
-  );
-}
+/* eslint-disable @typescript-eslint/no-use-before-define */
 
 /**
+ * Convert an Express path into an OpenAPI-compatible path.
+ */
+export function toOpenAPIPath(expressPath: string) {
+  const tokens = pathToRegexp.parse(expressPath);
+  return tokens
+    .map(d => typeof d === 'string' ? d : `${d.prefix}{${d.name}}`)
+    .join('');
+}
+
+/* Return full Express path of given route. */
+export function getFullExpressPath(route: IRoute): string {
+  const { action, controller, options } = route;
+  return `${options.routePrefix || ''}${controller.route || ''}${action.route || ''}`;
+}
+
+/*
  * Return full OpenAPI-formatted path of given route.
  */
 export function getFullPath(route: IRoute): string {
-  return expressToOpenAPIPath(getFullExpressPath(route));
+  const z = getFullExpressPath(route);
+  const b = toOpenAPIPath(z);
+  return b;
 }
 
-/**
+/*
  * Return OpenAPI Operation object for given route.
  */
 export function getOperation(route: IRoute): oa.OperationObject {
@@ -56,7 +62,7 @@ export function getOperation(route: IRoute): oa.OperationObject {
 /**
  * Return OpenAPI Operation ID for given route.
  */
-export function getOperationId(route: IRoute): string {
+export function getOperationId(route: IRoute) {
   return `${route.action.target.name}.${route.action.method}`;
 }
 
@@ -66,7 +72,6 @@ export function getOperationId(route: IRoute): string {
 export function getPaths(routes: IRoute[]): oa.PathObject {
   const routePaths = routes.map(route => ({ [getFullPath(route)]: { [route.action.type]: getOperation(route) } }));
 
-  // @ts-ignore: array spread
   return _.merge(...routePaths);
 }
 
@@ -201,9 +206,12 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
       required: isRequired(bodyMeta, route)
     };
   }
+
   if (bodyParamsSchema) {
     return { content: { 'application/json': { schema: bodyParamsSchema } } };
   }
+
+  return undefined;
 }
 
 /**
@@ -249,7 +257,7 @@ export function getResponses(route: IRoute): oa.ResponsesObject {
  * Return OpenAPI specification for given routes.
  */
 export function getSpec(projectPath, storage: MetadataArgsStorage, routes: IRoute[]): oa.OpenAPIObject {
-  typeInformation = getControllerMethodsTypes(storage, projectPath);
+  typeInformation = getControllerMethodsTypes(storage, projectPath, routes);
 
   return {
     components: { schemas },
@@ -274,19 +282,6 @@ export function getTags(route: IRoute): string[] {
 }
 
 /**
- * Convert an Express path into an OpenAPI-compatible path.
- */
-export function expressToOpenAPIPath(expressPath: string) {
-  const tokens = pathToRegexp.parse(expressPath);
-  return tokens
-    .map(d => {
-      if (_.isString(d)) return d;
-      return `${(d as Key).prefix}{${(d as Key).name}}`;
-    })
-    .join('');
-}
-
-/**
  * Return true if given metadata argument is required, checking for global
  * setting if local setting is not defined.
  */
@@ -302,11 +297,12 @@ function isRequired(meta: { required?: boolean }, route: IRoute) {
 function getParamSchema(
   param: ParamMetadataArgs
 ): oa.SchemaObject | oa.ReferenceObject {
-  const { explicitType, index, object, method, name } = param;
+  const { object, method, name } = param;
   const controllerName = object.constructor.name;
   const methods = typeInformation.get(controllerName);
 
   if (name) {
+    console.log(controllerName);
     const paramType = methods.get(method).params.find(x => x.name === name);
     return paramType.type;
   }
@@ -314,3 +310,5 @@ function getParamSchema(
   const paramType = methods.get(method).params.find(x => x.decorators.find(d => d.includes('@Body(')));
   return paramType.type;
 }
+
+/* eslint-enable @typescript-eslint/no-use-before-define */

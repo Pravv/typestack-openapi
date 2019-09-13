@@ -6,9 +6,27 @@ import { getContentType, getStatusCode, IRoute } from './index';
 
 const OPEN_API_KEY = Symbol('routing-controllers-openapi:OpenAPI');
 
-export type OpenAPIParam =
-  | Partial<OperationObject>
-  | ((source: OperationObject, route: IRoute) => OperationObject)
+export type OpenAPIParam = Partial<OperationObject> | ((source: OperationObject, route: IRoute) => OperationObject)
+
+/**
+ * Get the OpenAPI Operation object stored in given target property's metadata.
+ */
+function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
+  return (
+    (key
+      ? Reflect.getMetadata(OPEN_API_KEY, target.constructor, key)
+      : Reflect.getMetadata(OPEN_API_KEY, target)) || []
+  );
+}
+
+/**
+ * Store given OpenAPI Operation object into target property's metadata.
+ */
+function setOpenAPIMetadata(value: OpenAPIParam[], target: object, key?: string) {
+  return key
+    ? Reflect.defineMetadata(OPEN_API_KEY, value, target.constructor, key)
+    : Reflect.defineMetadata(OPEN_API_KEY, value, target);
+}
 
 /**
  * Supplement action with additional OpenAPI Operation keywords.
@@ -37,45 +55,19 @@ export function OpenAPI(spec: OpenAPIParam) {
 /**
  * Apply the keywords defined in @OpenAPI decorator to its target route.
  */
-export function applyOpenAPIDecorator(
-  originalOperation: OperationObject,
-  route: IRoute
-): OperationObject {
+export function applyOpenAPIDecorator(originalOperation: OperationObject, route: IRoute): OperationObject {
   const { action } = route;
   const openAPIParams = [
     ...getOpenAPIMetadata(action.target),
     ...getOpenAPIMetadata(action.target.prototype, action.method)
   ];
 
-  // @ts-ignore
-  return openAPIParams.reduce((acc: OperationObject, oaParam: OpenAPIParam) => (_.isFunction(oaParam)
-    // @ts-ignore
-    ? oaParam(acc, route)
-    : _.merge({}, acc, oaParam)), originalOperation) as OperationObject;
-}
-
-/**
- * Get the OpenAPI Operation object stored in given target property's metadata.
- */
-function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
-  return (
-    (key
-      ? Reflect.getMetadata(OPEN_API_KEY, target.constructor, key)
-      : Reflect.getMetadata(OPEN_API_KEY, target)) || []
-  );
-}
-
-/**
- * Store given OpenAPI Operation object into target property's metadata.
- */
-function setOpenAPIMetadata(
-  value: OpenAPIParam[],
-  target: object,
-  key?: string
-) {
-  return key
-    ? Reflect.defineMetadata(OPEN_API_KEY, value, target.constructor, key)
-    : Reflect.defineMetadata(OPEN_API_KEY, value, target);
+  return openAPIParams.reduce((acc: OperationObject, oaParam: OpenAPIParam) => {
+    if (typeof oaParam === 'function') {
+      return oaParam(acc, route);
+    }
+    return _.merge({}, acc, oaParam);
+  }, originalOperation);
 }
 
 /**
@@ -105,12 +97,12 @@ export function ResponseSchema(
 
     if (responseSchemaName) {
       const reference: ReferenceObject = { $ref: `#/components/schemas/${responseSchemaName}` };
-      const schema: SchemaObject = isArray
-        ? { items: reference, type: 'array' }
-        : reference;
+      const schema: SchemaObject = isArray ? { items: reference, type: 'array' } : reference;
       const responses: ResponsesObject = {
         [statusCode]: {
-          content: { [contentType]: { schema } },
+          content: {
+            [contentType]: { schema }
+          },
           description
         }
       };
