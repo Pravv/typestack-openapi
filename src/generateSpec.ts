@@ -302,7 +302,6 @@ function getParamSchema(
   const methods = typeInformation.get(controllerName);
 
   if (name) {
-    console.log(controllerName);
     const paramType = methods.get(method).params.find(x => x.name === name);
     return paramType.type;
   }

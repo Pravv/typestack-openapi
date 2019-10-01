@@ -32,7 +32,6 @@ export function parseType(type: Type, chainOfTypes): SwaggerType {
     chainOfTypes.push(className);
     toSchema(type, chainOfTypes);
   }
-  console.log('parseType', type.getText());
 
   return { $ref: `#/components/schemas/${className}` };
 }
@@ -61,8 +60,6 @@ export function topLevel(type: Type): SwaggerType {
 
   const className = type.getSymbol().getEscapedName();
   const chainOfTypes = [className];
-
-  console.log('topLevel', type.getText());
 
   if (!schemas[className]) {
     toSchema(type, chainOfTypes);
