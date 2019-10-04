@@ -1,6 +1,6 @@
 ## About
 Leverages Typescript compiler to gather information about types of request and response payloads. 
-It's a pro not suited to be used in production.  
+It's a PoC not suited for production usage.  
 based on https://github.com/epiphone/routing-controllers-openapi
 
 ## Current Limitations
