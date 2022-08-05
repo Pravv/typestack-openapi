@@ -1,10 +1,10 @@
 // tslint:disable:no-submodule-imports
 import * as _ from 'lodash';
 import { MetadataArgsStorage, RoutingControllersOptions } from 'routing-controllers';
-import { ActionMetadataArgs } from 'routing-controllers/metadata/args/ActionMetadataArgs';
-import { ControllerMetadataArgs } from 'routing-controllers/metadata/args/ControllerMetadataArgs';
-import { ParamMetadataArgs } from 'routing-controllers/metadata/args/ParamMetadataArgs';
-import { ResponseHandlerMetadataArgs } from 'routing-controllers/metadata/args/ResponseHandleMetadataArgs';
+import { ActionMetadataArgs } from 'routing-controllers/types/metadata/args/ActionMetadataArgs';
+import { ControllerMetadataArgs } from 'routing-controllers/types/metadata/args/ControllerMetadataArgs';
+import { ParamMetadataArgs } from 'routing-controllers/types/metadata/args/ParamMetadataArgs';
+import { ResponseHandlerMetadataArgs } from 'routing-controllers/types/metadata/args/ResponseHandleMetadataArgs';
 
 /**
  * All the context for a single route.
@@ -17,7 +17,7 @@ export interface IRoute {
   readonly responseHandlers: ResponseHandlerMetadataArgs[];
 }
 
-/**
+/*
  * Parse routing-controllers metadata into an IRoute objects array.
  */
 export function parseRoutes(storage: MetadataArgsStorage, options: RoutingControllersOptions = {}): IRoute[] {

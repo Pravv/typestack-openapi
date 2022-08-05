@@ -20,8 +20,6 @@ function normalizeMeta(metaStorage): MetadataArgsStorage {
   return storage;
 }
 
-export const schemas = { Date: { type: 'object' } };
-
 export function getControllerMethodsTypes(storage: MetadataArgsStorage, projectPath: string, routes: IRoute[]) {
   const meta = normalizeMeta(storage);
 

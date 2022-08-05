@@ -1,7 +1,6 @@
 import { ClassDeclaration, Directory, Project, SourceFile } from 'ts-morph';
 import { parseParam, parseReturn } from './functionParse';
 import { MetadataArgsStorage } from 'routing-controllers';
-import { IRoute } from '../parseMetadata';
 
 function getFiles(directory: Directory) {
   const files = [];

@@ -1,19 +1,16 @@
+import 'reflect-metadata';
 import * as _ from 'lodash';
 import * as oa from 'openapi3-ts';
 import * as pathToRegexp from 'path-to-regexp';
+import { ParamMetadataArgs } from 'routing-controllers/types/metadata/args/ParamMetadataArgs';
 
-import 'reflect-metadata';
-import { MetadataArgsStorage } from 'routing-controllers';
-import { ParamMetadataArgs } from 'routing-controllers/metadata/args/ParamMetadataArgs';
-import { getControllerMethodsTypes, schemas } from './ast';
 import { applyOpenAPIDecorator } from './decorators';
 import { IRoute } from './index';
-
-let typeInformation;
+import { endpointTypesInfo } from './helpers/magazine';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-/**
+/*
  * Convert an Express path into an OpenAPI-compatible path.
  */
 export function toOpenAPIPath(expressPath: string) {
@@ -34,8 +31,7 @@ export function getFullExpressPath(route: IRoute): string {
  */
 export function getFullPath(route: IRoute): string {
   const z = getFullExpressPath(route);
-  const b = toOpenAPIPath(z);
-  return b;
+  return toOpenAPIPath(z);
 }
 
 /*
@@ -59,14 +55,14 @@ export function getOperation(route: IRoute): oa.OperationObject {
   return applyOpenAPIDecorator(cleanedOperation, route);
 }
 
-/**
+/*
  * Return OpenAPI Operation ID for given route.
  */
 export function getOperationId(route: IRoute) {
   return `${route.action.target.name}.${route.action.method}`;
 }
 
-/**
+/*
  * Return OpenAPI Paths Object for given routes
  */
 export function getPaths(routes: IRoute[]): oa.PathObject {
@@ -75,7 +71,7 @@ export function getPaths(routes: IRoute[]): oa.PathObject {
   return _.merge(...routePaths);
 }
 
-/**
+/*
  * Return header parameters of given route.
  */
 export function getHeaderParams(route: IRoute): oa.ParameterObject[] {
@@ -106,7 +102,7 @@ export function getHeaderParams(route: IRoute): oa.ParameterObject[] {
   return headers;
 }
 
-/**
+/*
  * Return path parameters of given route.
  *
  * Path parameters are first parsed from the path string itself, and then
@@ -123,7 +119,7 @@ export function getPathParams(route: IRoute): oa.ParameterObject[] {
       const param: oa.ParameterObject = {
         in: 'path',
         name,
-        required: !token.optional,
+        required: !token.modifier.includes('?'),
         schema: { type: 'string' }
       };
 
@@ -136,7 +132,7 @@ export function getPathParams(route: IRoute): oa.ParameterObject[] {
     });
 }
 
-/**
+/*
  * Return query parameters of given route.
  */
 export function getQueryParams(route: IRoute): oa.ParameterObject[] {
@@ -167,7 +163,7 @@ export function getQueryParams(route: IRoute): oa.ParameterObject[] {
   return queries;
 }
 
-/**
+/*
  * Return OpenAPI requestBody of given route, if it has one.
  */
 export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
@@ -214,7 +210,7 @@ export function getRequestBody(route: IRoute): oa.RequestBodyObject | void {
   return undefined;
 }
 
-/**
+/*
  * Return the content type of given route.
  */
 export function getContentType(route: IRoute): string {
@@ -225,7 +221,7 @@ export function getContentType(route: IRoute): string {
   return contentMeta ? contentMeta.value : defaultContentType;
 }
 
-/**
+/*
  * Return the status code of given route.
  */
 export function getStatusCode(route: IRoute): string {
@@ -233,12 +229,12 @@ export function getStatusCode(route: IRoute): string {
   return successMeta ? `${successMeta.value}` : '200';
 }
 
-/**
+/*
  * Return OpenAPI Responses object of given route.
  */
 export function getResponses(route: IRoute): oa.ResponsesObject {
   const controllerName = route.action.target.name;
-  const methods = typeInformation.get(controllerName);
+  const methods = endpointTypesInfo.get(controllerName);
   const method = methods.get(route.action.method);
   const returnType = method.returnType.type;
 
@@ -253,12 +249,10 @@ export function getResponses(route: IRoute): oa.ResponsesObject {
   };
 }
 
-/**
+/*
  * Return OpenAPI specification for given routes.
  */
-export function getSpec(projectPath, storage: MetadataArgsStorage, routes: IRoute[]): oa.OpenAPIObject {
-  typeInformation = getControllerMethodsTypes(storage, projectPath, routes);
-
+export function getSpec(routes: IRoute[], schemas): oa.OpenAPIObject {
   return {
     components: { schemas },
     info: { title: '', version: '1.0.0' },
@@ -267,21 +261,21 @@ export function getSpec(projectPath, storage: MetadataArgsStorage, routes: IRout
   };
 }
 
-/**
+/*
  * Return OpenAPI Operation summary string for given route.
  */
 export function getSummary(route: IRoute): string {
   return _.capitalize(_.startCase(route.action.method));
 }
 
-/**
+/*
  * Return OpenAPI tags for given route.
  */
 export function getTags(route: IRoute): string[] {
   return [_.startCase(route.controller.target.name.replace(/Controller$/, ''))];
 }
 
-/**
+/*
  * Return true if given metadata argument is required, checking for global
  * setting if local setting is not defined.
  */
@@ -290,7 +284,7 @@ function isRequired(meta: { required?: boolean }, route: IRoute) {
   return globalRequired ? meta.required !== false : !!meta.required;
 }
 
-/**
+/*
  * Parse given parameter's OpenAPI Schema or Reference object using metadata
  * reflection.
  */
@@ -299,7 +293,7 @@ function getParamSchema(
 ): oa.SchemaObject | oa.ReferenceObject {
   const { object, method, name } = param;
   const controllerName = object.constructor.name;
-  const methods = typeInformation.get(controllerName);
+  const methods = endpointTypesInfo.get(controllerName);
 
   if (name) {
     const paramType = methods.get(method).params.find(x => x.name === name);

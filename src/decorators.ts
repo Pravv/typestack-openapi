@@ -8,7 +8,7 @@ const OPEN_API_KEY = Symbol('routing-controllers-openapi:OpenAPI');
 
 export type OpenAPIParam = Partial<OperationObject> | ((source: OperationObject, route: IRoute) => OperationObject)
 
-/**
+/*
  * Get the OpenAPI Operation object stored in given target property's metadata.
  */
 function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
@@ -19,7 +19,7 @@ function getOpenAPIMetadata(target: object, key?: string): OpenAPIParam[] {
   );
 }
 
-/**
+/*
  * Store given OpenAPI Operation object into target property's metadata.
  */
 function setOpenAPIMetadata(value: OpenAPIParam[], target: object, key?: string) {
@@ -28,7 +28,7 @@ function setOpenAPIMetadata(value: OpenAPIParam[], target: object, key?: string)
     : Reflect.defineMetadata(OPEN_API_KEY, value, target);
 }
 
-/**
+/*
  * Supplement action with additional OpenAPI Operation keywords.
  *
  * @param spec OpenAPI Operation object that is merged into the schema derived
@@ -52,7 +52,7 @@ export function OpenAPI(spec: OpenAPIParam) {
   };
 }
 
-/**
+/*
  * Apply the keywords defined in @OpenAPI decorator to its target route.
  */
 export function applyOpenAPIDecorator(originalOperation: OperationObject, route: IRoute): OperationObject {
@@ -70,7 +70,7 @@ export function applyOpenAPIDecorator(originalOperation: OperationObject, route:
   }, originalOperation);
 }
 
-/**
+/*
  * Supplement action with response body type annotation.
  */
 export function ResponseSchema(

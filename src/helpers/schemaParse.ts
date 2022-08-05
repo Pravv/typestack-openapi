@@ -1,6 +1,6 @@
-import { SyntaxKind, Type, Decorator, ClassDeclaration } from 'ts-morph';
-import { schemas } from '../ast';
+import { Decorator, SyntaxKind, Type } from 'ts-morph';
 import { parseType, unwrapType } from './typeParse';
+import { schemas } from './magazine';
 
 function parsePropertyType(propType: Type, chainOfTypes: string[]) {
   const propTypeName = propType.isClassOrInterface() ? propType.getSymbol().getEscapedName() : '';

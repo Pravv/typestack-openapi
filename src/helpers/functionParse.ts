@@ -1,9 +1,9 @@
 import { MethodDeclaration, ParameterDeclaration } from 'ts-morph';
-import { SwaggerType, topLevel, unwrapType } from './typeParse';
+import { SwaggerType, parseType, unwrapType } from './typeParse';
 
 export function parseParam(param: ParameterDeclaration): { name: string; type: { items?: SwaggerType; $ref?: string; type: 'array' } | SwaggerType; decorators?: string[] } {
   const type = unwrapType(param.getType());
-  const swaggerType = topLevel(type);
+  const swaggerType = parseType(type);
 
   const decorators = param.getDecorators().map(x => x.getText());
 
@@ -17,8 +17,8 @@ export function parseReturn(x: MethodDeclaration) {
   const typeReturn = unwrapType(x.getReturnType());
 
   if (typeReturn.isArray()) {
-    return { type: { items: topLevel(typeReturn), type: 'array' } };
+    return { type: { items: parseType(typeReturn), type: 'array' } };
   }
 
-  return { type: topLevel(typeReturn) };
+  return { type: parseType(typeReturn) };
 }
